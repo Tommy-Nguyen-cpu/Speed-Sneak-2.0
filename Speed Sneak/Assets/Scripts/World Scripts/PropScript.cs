@@ -8,20 +8,20 @@ public class PropScript : MonoBehaviour
     public GameObject woodBlock;
     public GameObject trashCan;
     public GameObject box;
-    GameObject[] props = new GameObject[6];
+    List<GameObject> props;
     // Start is called before the first frame update
     void Start()
     {
         // TODO: PCG will take this process and do it themselves.
         // Generate 2-10 repetitive probs.
         int numberOfRepetitiveProps = Random.Range(2, 11);
-
+        props = new List<GameObject>();
         for (int i = 0; i <= numberOfRepetitiveProps; i++)
         {
-            Instantiate(bucket, new Vector3(Random.Range(0,1000), 0.3f, Random.Range(0,1000)), Quaternion.identity);
-            Instantiate(woodBlock, new Vector3(Random.Range(0, 1000), 0.3f, Random.Range(0, 1000)), Quaternion.identity);
-            Instantiate(trashCan, new Vector3(Random.Range(0, 1000), 0.3f, Random.Range(0, 1000)), Quaternion.identity);
-            Instantiate(box, new Vector3(Random.Range(0, 1000), 0.3f, Random.Range(0, 1000)), Quaternion.identity);
+            props.Add(Instantiate(bucket, new Vector3(Random.Range(0,100), 0.3f, Random.Range(0,100)), Quaternion.identity));
+            props.Add(Instantiate(woodBlock, new Vector3(Random.Range(0, 100), 0.3f, Random.Range(0, 100)), Quaternion.identity));
+            props.Add(Instantiate(trashCan, new Vector3(Random.Range(0, 100), 0.3f, Random.Range(0, 100)), Quaternion.identity));
+            props.Add(Instantiate(box, new Vector3(Random.Range(0, 100), 0.3f, Random.Range(0, 100)), Quaternion.identity));
         }
     }
 
@@ -29,5 +29,22 @@ public class PropScript : MonoBehaviour
     void Update()
     {
         // TODO: Check to see if the player collides with any of the prefabs using Raycasting.
+        for(int i = 0; i< props.Count; i++)
+        {
+            RaycastHit hit;
+
+            // Vector3.forward works now. Turns out I though the back of the guard was the front, when the front was actually the "blue" side.
+            Vector3 propPosition = new Vector3(props[i].transform.position.x, 1.5f, props[i].transform.position.z);
+
+            // Casts a ray that looks for collisions with the ray.
+            bool collidedWithPlayer = Physics.Raycast(propPosition, props[i].transform.forward, out hit, 10f);
+            if (collidedWithPlayer)
+            {
+                SoundDetection.soundDetected = true;
+                SoundDetection.sourceOfSound = props[i];
+                Debug.Log("Collided with player!");
+                break;
+            }
+        }
     }
 }
