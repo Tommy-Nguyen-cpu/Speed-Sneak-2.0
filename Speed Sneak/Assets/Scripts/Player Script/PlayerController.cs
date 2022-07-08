@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // TODO: Ethan will implement the playing "Standing" animation if no buttons are pressed.
         // TODO: Work on allowing the player to move and apply animation accordingly.
         if (Input.GetKey(KeyCode.UpArrow))
         {
@@ -36,5 +37,6 @@ public class PlayerController : MonoBehaviour
         {
             transform.Rotate(Vector3.up, 1);
         }
+
     }
 }
