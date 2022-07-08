@@ -16,7 +16,7 @@ public class SuspectCondition : Condition
         double differenceZ = Math.Abs(Player.transform.position.z - currentNPC.transform.position.z);
 
         // In our case, earshot for an agent would be within 100 distance from the player.
-        if (SoundDetection.soundDetected && differenceX >= 100 && differenceZ >= 100)
+        if (SoundDetection.soundDetected && (differenceX <= 100 || differenceZ <= 100))
         {
             return true;
         }
