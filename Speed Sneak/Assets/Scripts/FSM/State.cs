@@ -120,14 +120,23 @@ public class State : MonoBehaviour
             if(AnimContr.anim.GetCurrentAnimatorStateInfo(0).IsName("DroneGuard|Idle"))
             {
                 // When having the agent look at the player, we need to use Vector3.up and not Vector3.forward (strange distortion of guard asset).
-                gameObject.transform.LookAt(Player.transform, Vector3.up);
-                transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, Time.deltaTime * 5);
+                //gameObject.transform.LookAt(Player.transform, Vector3.up);
+                //transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, Time.deltaTime * 5);
             }
         }
         else if(currentState == States.SUSPECT)
         {
-            // TODO: Implement behaviour for suspect state.
+            // DONE: Implement behaviour for suspect state.
+            gameObject.transform.LookAt(SoundDetection.sourceOfSound.transform, Vector3.up);
+            transform.position = Vector3.MoveTowards(transform.position, SoundDetection.sourceOfSound.transform.position, Time.deltaTime * 5);
             Debug.Log("Something suspicious just happened!");
+            //Debug.Log("Distance between NPC and suspected object:" + Vector3.Distance(transform.position, SoundDetection.sourceOfSound.transform.position));
+            if(Vector3.Distance(transform.position, SoundDetection.sourceOfSound.transform.position) == 0)
+            {
+                SoundDetection.soundDetected = false;
+
+            }
+
         }
         else if(currentState == States.WIN)
         {
