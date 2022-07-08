@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.DownArrow))
         {
             anim.Play("RunAndAim");
-            transform.Translate(Vector3.back * Time.deltaTime);
+            transform.Translate(Vector3.back * Time.deltaTime * (Input.GetKey(KeyCode.RightShift) || Input.GetKey(KeyCode.LeftShift) ? 20 : 1));
         }
 
         if (Input.GetKey(KeyCode.LeftArrow))
