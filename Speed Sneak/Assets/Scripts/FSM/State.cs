@@ -41,7 +41,7 @@ public class State : MonoBehaviour
         // By default, the agent should be patrolling the field.
         setState(States.PATROL);
 
-        // A separate script will have to disabled to avoid an infinite generation of scripts.
+        // Agent's controller (AnimContr.cs) will enable the script.
         this.enabled = false;
 
         transitions = new List<Transition>();
@@ -115,10 +115,10 @@ public class State : MonoBehaviour
             // TODO: Implement behaviour for patrol state.
             Debug.Log("Guard is patrolling!");
 
-            // TODO: Temporary action agent will take. Will change once we implement PCG and A* Search.
             // Checks to see if we finished the "WakeUp" animation.
             if(AnimContr.anim.GetCurrentAnimatorStateInfo(0).IsName("DroneGuard|Idle"))
             {
+                // TODO: Temporary action agent will take. Will change once we implement PCG and A* Search.
                 // When having the agent look at the player, we need to use Vector3.up and not Vector3.forward (strange distortion of guard asset).
                 //gameObject.transform.LookAt(Player.transform, Vector3.up);
                 //transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, Time.deltaTime * 5);
@@ -126,11 +126,12 @@ public class State : MonoBehaviour
         }
         else if(currentState == States.SUSPECT)
         {
-            // DONE: Implement behaviour for suspect state.
+            // DONE: Temporary action agent will take. Will change once we implement PCG and A* Search.
             gameObject.transform.LookAt(SoundDetection.sourceOfSound.transform, Vector3.up);
             transform.position = Vector3.MoveTowards(transform.position, SoundDetection.sourceOfSound.transform.position, Time.deltaTime * 5);
             Debug.Log("Something suspicious just happened!");
-            //Debug.Log("Distance between NPC and suspected object:" + Vector3.Distance(transform.position, SoundDetection.sourceOfSound.transform.position));
+
+            // We will disable the flag if the agent reached the location of the sound.
             if(Vector3.Distance(transform.position, SoundDetection.sourceOfSound.transform.position) == 0)
             {
                 SoundDetection.soundDetected = false;

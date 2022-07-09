@@ -28,7 +28,6 @@ public class PropScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // TODO: Check to see if the player collides with any of the prefabs using Raycasting.
         for(int i = 0; i< props.Count; i++)
         {
             RaycastHit hit;
@@ -38,6 +37,8 @@ public class PropScript : MonoBehaviour
 
             // Casts a ray that looks for collisions with the ray.
             bool collidedWithPlayer = Physics.Raycast(propPosition, props[i].transform.forward, out hit, 10f);
+
+            // If the player collided with a prop, we'll set the soundDetected flag to true and the source of the sound object to be the prop.
             if (collidedWithPlayer)
             {
                 SoundDetection.soundDetected = true;

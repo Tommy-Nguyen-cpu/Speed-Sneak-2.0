@@ -14,7 +14,6 @@ public class WinCondition : Condition
     {
         RaycastHit hit;
 
-        // It seems that "Vector3.back" works, but "Vector3.forward" doesn't. Seems that the front of the guard is actually the back.
         Vector3 NPCPosition = new Vector3(currentNPC.transform.position.x, 1.5f, currentNPC.transform.position.z);
 
         // Casts a ray that looks for collisions with the ray.
