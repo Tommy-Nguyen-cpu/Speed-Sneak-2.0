@@ -19,6 +19,9 @@ public class State : MonoBehaviour
     /// </summary>
     public float currentTime = 0.0f;
 
+
+    private PatrolMovement patrolling;
+
     /// <summary>
     /// PATROL - if agent doesn't see player, follow a set route.
     /// CHASE - if agent sees player, chase player.
@@ -74,6 +77,13 @@ public class State : MonoBehaviour
     // Called when the current instance of the script is enabled.
     void OnEnable()
     {
+        // Initializes the "PatrolMovement" which allows the NPC to patrol in a circular motion.
+        patrolling = new PatrolMovement();
+
+        // Sets the original position of the NPC.
+        patrolling.NPCOriginalPosition = AnimContr.NPCOriginalPosition;
+
+
         // Initialize the states
         State patrol = gameObject.AddComponent<State>() as State;
         patrol.currentState = States.PATROL;
@@ -118,6 +128,7 @@ public class State : MonoBehaviour
             // Checks to see if we finished the "WakeUp" animation.
             if(AnimContr.anim.GetCurrentAnimatorStateInfo(0).IsName("DroneGuard|Idle"))
             {
+                patrolling.NPCPatrol(gameObject);
                 // TODO: Temporary action agent will take. Will change once we implement PCG and A* Search.
                 // When having the agent look at the player, we need to use Vector3.up and not Vector3.forward (strange distortion of guard asset).
                 //gameObject.transform.LookAt(Player.transform, Vector3.up);
@@ -163,6 +174,10 @@ public class State : MonoBehaviour
             if (transition.conditional.Test())
             {
                 transition.target.enabled = true;
+
+                // Passes the current timeCounter value to the next state so that the agent continues to patrol smoothly.
+                transition.target.patrolling.timeCounter = patrolling.timeCounter;
+
 
                 // Reset timer.
                 transition.conditional.elapsedTime = 0.0f;
