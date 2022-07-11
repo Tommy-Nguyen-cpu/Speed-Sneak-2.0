@@ -7,7 +7,6 @@ public class TitleScreen : MonoBehaviour
     // Start is called before the first frame update
     public void SwitchTheClass()
     {
-
         SceneManager.LoadScene(1);
     }    
 }
