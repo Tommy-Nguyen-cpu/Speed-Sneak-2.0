@@ -137,16 +137,19 @@ public class State : MonoBehaviour
         }
         else if(currentState == States.SUSPECT)
         {
-            // DONE: Temporary action agent will take. Will change once we implement PCG and A* Search.
-            gameObject.transform.LookAt(SoundDetection.sourceOfSound.transform, Vector3.up);
-            transform.position = Vector3.MoveTowards(transform.position, SoundDetection.sourceOfSound.transform.position, Time.deltaTime * 5);
             Debug.Log("Something suspicious just happened!");
-
-            // We will disable the flag if the agent reached the location of the sound.
-            if(Vector3.Distance(transform.position, SoundDetection.sourceOfSound.transform.position) == 0)
+            if (AnimContr.anim.GetCurrentAnimatorStateInfo(0).IsName("DroneGuard|Idle"))
             {
-                SoundDetection.soundDetected = false;
+                // DONE: Temporary action agent will take. Will change once we implement PCG and A* Search.
+                gameObject.transform.LookAt(SoundDetection.sourceOfSound.transform, Vector3.up);
+                transform.position = Vector3.MoveTowards(transform.position, SoundDetection.sourceOfSound.transform.position, Time.deltaTime * 5);
 
+                // We will disable the flag if the agent reached the location of the sound.
+                if (Vector3.Distance(transform.position, SoundDetection.sourceOfSound.transform.position) == 0)
+                {
+                    SoundDetection.soundDetected = false;
+
+                }
             }
 
         }
