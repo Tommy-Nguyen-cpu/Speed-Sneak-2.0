@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class State : MonoBehaviour
 {
@@ -155,8 +156,9 @@ public class State : MonoBehaviour
         }
         else if(currentState == States.WIN)
         {
-            // TODO: Implement behaviour for win state. Should literally just bring up a menu saying "player win" or "player lost".
             Debug.Log("Player came into contact with guard! Player lost!");
+            TitleScreen.currentState = TitleScreen.GameState.LOST;
+            SceneManager.LoadScene(0);
         }
 
     }
