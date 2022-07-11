@@ -4,9 +4,16 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class TitleScreen : MonoBehaviour
 {
-    // Start is called before the first frame update
+    /// <summary>
+    /// Switches the scene to the "SampleScene" when the button is clicked.
+    /// </summary>
     public void SwitchTheClass()
     {
         SceneManager.LoadScene(1);
-    }    
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
+    }
 }
