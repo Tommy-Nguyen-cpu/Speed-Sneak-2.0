@@ -173,6 +173,7 @@ public class State
                 //transition.target.patrolling.timeCounter = patrolling.timeCounter;
 
                 // Reset timer.
+                currentTime = 0.0f;
                 transition.conditional.elapsedTime = 0.0f;
 
                 return transition.target;
