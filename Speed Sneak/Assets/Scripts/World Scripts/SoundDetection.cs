@@ -9,4 +9,5 @@ public class SoundDetection
 {
     // Used to determine if the player produced a sound (i.e. stepped on some object).
     public static bool soundDetected = false;
+    public static GameObject sourceOfSound;
 }

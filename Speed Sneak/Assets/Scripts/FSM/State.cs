@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class State : MonoBehaviour
 {
@@ -18,6 +19,9 @@ public class State : MonoBehaviour
     /// Keeps track of how much time has passed in order to check to see if we should change to "Patrol" state.
     /// </summary>
     public float currentTime = 0.0f;
+
+
+    private PatrolMovement patrolling;
 
     /// <summary>
     /// PATROL - if agent doesn't see player, follow a set route.
@@ -41,7 +45,7 @@ public class State : MonoBehaviour
         // By default, the agent should be patrolling the field.
         setState(States.PATROL);
 
-        // A separate script will have to disabled to avoid an infinite generation of scripts.
+        // Agent's controller (AnimContr.cs) will enable the script.
         this.enabled = false;
 
         transitions = new List<Transition>();
@@ -74,6 +78,13 @@ public class State : MonoBehaviour
     // Called when the current instance of the script is enabled.
     void OnEnable()
     {
+        // Initializes the "PatrolMovement" which allows the NPC to patrol in a circular motion.
+        patrolling = new PatrolMovement();
+
+        // Sets the original position of the NPC.
+        patrolling.NPCOriginalPosition = AnimContr.NPCOriginalPosition;
+
+
         // Initialize the states
         State patrol = gameObject.AddComponent<State>() as State;
         patrol.currentState = States.PATROL;
@@ -115,24 +126,39 @@ public class State : MonoBehaviour
             // TODO: Implement behaviour for patrol state.
             Debug.Log("Guard is patrolling!");
 
-            // TODO: Temporary action agent will take. Will change once we implement PCG and A* Search.
             // Checks to see if we finished the "WakeUp" animation.
             if(AnimContr.anim.GetCurrentAnimatorStateInfo(0).IsName("DroneGuard|Idle"))
             {
+                patrolling.NPCPatrol(gameObject);
+                // TODO: Temporary action agent will take. Will change once we implement PCG and A* Search.
                 // When having the agent look at the player, we need to use Vector3.up and not Vector3.forward (strange distortion of guard asset).
-                gameObject.transform.LookAt(Player.transform, Vector3.up);
-                transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, Time.deltaTime * 5);
+                //gameObject.transform.LookAt(Player.transform, Vector3.up);
+                //transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, Time.deltaTime * 5);
             }
         }
         else if(currentState == States.SUSPECT)
         {
-            // TODO: Implement behaviour for suspect state.
             Debug.Log("Something suspicious just happened!");
+            if (AnimContr.anim.GetCurrentAnimatorStateInfo(0).IsName("DroneGuard|Idle"))
+            {
+                // DONE: Temporary action agent will take. Will change once we implement PCG and A* Search.
+                gameObject.transform.LookAt(SoundDetection.sourceOfSound.transform, Vector3.up);
+                transform.position = Vector3.MoveTowards(transform.position, SoundDetection.sourceOfSound.transform.position, Time.deltaTime * 5);
+
+                // We will disable the flag if the agent reached the location of the sound.
+                if (Vector3.Distance(transform.position, SoundDetection.sourceOfSound.transform.position) == 0)
+                {
+                    SoundDetection.soundDetected = false;
+
+                }
+            }
+
         }
         else if(currentState == States.WIN)
         {
-            // TODO: Implement behaviour for win state. Should literally just bring up a menu saying "player win" or "player lost".
             Debug.Log("Player came into contact with guard! Player lost!");
+            TitleScreen.currentState = TitleScreen.GameState.LOST;
+            SceneManager.LoadScene(0);
         }
 
     }
@@ -153,6 +179,10 @@ public class State : MonoBehaviour
             if (transition.conditional.Test())
             {
                 transition.target.enabled = true;
+
+                // Passes the current timeCounter value to the next state so that the agent continues to patrol smoothly.
+                transition.target.patrolling.timeCounter = patrolling.timeCounter;
+
 
                 // Reset timer.
                 transition.conditional.elapsedTime = 0.0f;
