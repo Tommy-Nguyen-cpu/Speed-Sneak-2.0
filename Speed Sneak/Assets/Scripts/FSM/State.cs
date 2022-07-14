@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class State : MonoBehaviour
+public class State
 {
     /// <summary>
     /// The current state the guard is in.
@@ -11,17 +11,12 @@ public class State : MonoBehaviour
     public States currentState;
 
     /// <summary>
-    /// Lists of possible transitions so the guard knows which states are available.
-    /// </summary>
-    public List<Transition> transitions;
-
-    /// <summary>
     /// Keeps track of how much time has passed in order to check to see if we should change to "Patrol" state.
     /// </summary>
     public float currentTime = 0.0f;
 
-
-    private PatrolMovement patrolling;
+    // Initializes the "PatrolMovement" which allows the NPC to patrol in a circular motion.
+    private PatrolMovement patrolling = new PatrolMovement();
 
     /// <summary>
     /// PATROL - if agent doesn't see player, follow a set route.
@@ -37,26 +32,23 @@ public class State : MonoBehaviour
     // Keeps track of the player.
     GameObject Player;
 
-    // Called when the current instance of the script is loaded.
-    void Awake()
+    public State()
     {
+        // Each time a new State is instantiated, we will find the player gameobject and set the "Player" field to be this gameobject.
         Player = GameObject.Find("Player");
+
+    }
+
+    // Called when the current instance of the script is loaded.
+    public List<Transition> SetUpState()
+    {
 
         // By default, the agent should be patrolling the field.
         setState(States.PATROL);
 
-        // Agent's controller (AnimContr.cs) will enable the script.
-        this.enabled = false;
-
-        transitions = new List<Transition>();
+        List<Transition> transitions = new List<Transition>();
 
         // Set up transitions.
-
-        // "Patrol" condition should be the last thing it checks.
-        // Sets up the "patrol" transition.
-        Transition toPatrol = new Transition();
-        toPatrol.conditional = new PatrolCondition();
-        transitions.Add(toPatrol);
 
         // Sets up the "suspect" transition.
         Transition toSuspect = new Transition();
@@ -73,136 +65,120 @@ public class State : MonoBehaviour
         Transition toChase = new Transition();
         toChase.conditional = new ChaseCondition();
         transitions.Add(toChase);
-    }
 
-    // Called when the current instance of the script is enabled.
-    void OnEnable()
-    {
-        // Initializes the "PatrolMovement" which allows the NPC to patrol in a circular motion.
-        patrolling = new PatrolMovement();
+
+        // "Patrol" condition should be the last thing it checks.
+        // Sets up the "patrol" transition.
+        Transition toPatrol = new Transition();
+        toPatrol.conditional = new PatrolCondition();
+        transitions.Add(toPatrol);
+
 
         // Sets the original position of the NPC.
         patrolling.NPCOriginalPosition = AnimContr.NPCOriginalPosition;
 
 
-        // Initialize the states
-        State patrol = gameObject.AddComponent<State>() as State;
-        patrol.currentState = States.PATROL;
-        transitions[0].target = patrol;
-
-        State suspect = gameObject.AddComponent<State>() as State;
+        State suspect = new State();
         suspect.currentState = States.SUSPECT;
-        transitions[1].target = suspect;
+        transitions[0].target = suspect;
 
-        State win = gameObject.AddComponent<State>() as State;
+        State win = new State();
         win.currentState = States.WIN;
-        transitions[2].target = win;
+        transitions[1].target = win;
 
 
-        State chase = gameObject.AddComponent<State>() as State;
+        State chase = new State();
         chase.currentState = States.CHASE;
-        transitions[3].target = chase;
+        transitions[2].target = chase;
+
+
+        // Initialize the states
+        State patrol = new State();
+        patrol.currentState = States.PATROL;
+        transitions[3].target = patrol;
+
+        return transitions;
     }
 
     // Update is called once per frame
-    void Update()
+    public void StateAction(GameObject currentNPC)
     {
-        currentTime += Time.deltaTime;
-        if(currentState == States.CHASE)
+        Debug.Log("Current Time: " + currentTime);
+        // Checks to see if the guard animation is "WakeUp".
+        if (AnimContr.anim.GetCurrentAnimatorStateInfo(0).IsName("DroneGuard|Idle"))
         {
-            // TODO: Implement behaviour for chase state.
-            Debug.Log("Guard is chasing the player!");
+            currentTime += Time.deltaTime;
 
-            // TODO: Temporary action agent will take. Will change once we implement PCG and A* Search.
-            // Checks to see if we finished the "WakeUp" animation.
-            if (AnimContr.anim.GetCurrentAnimatorStateInfo(0).IsName("DroneGuard|Idle"))
+            if (currentState == States.CHASE)
             {
+                // TODO: Implement behaviour for chase state.
+                Debug.Log("Guard is chasing the player!");
+
+                // TODO: Temporary action agent will take. Will change once we implement PCG and A* Search.
+
                 //gameObject.transform.LookAt(Player.transform, Vector3.forward);
-                transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, Time.deltaTime * 5);
+                currentNPC.transform.position = Vector3.MoveTowards(currentNPC.transform.position, Player.transform.position, Time.deltaTime * 5);
             }
-        }
-        else if(currentState == States.PATROL)
-        {
-            // TODO: Implement behaviour for patrol state.
-            Debug.Log("Guard is patrolling!");
-
-            // Checks to see if we finished the "WakeUp" animation.
-            if(AnimContr.anim.GetCurrentAnimatorStateInfo(0).IsName("DroneGuard|Idle"))
+            else if (currentState == States.PATROL)
             {
-                patrolling.NPCPatrol(gameObject);
+                // TODO: Implement behaviour for patrol state.
+                Debug.Log("Guard is patrolling!");
+
+                patrolling.NPCPatrol(currentNPC);
                 // TODO: Temporary action agent will take. Will change once we implement PCG and A* Search.
                 // When having the agent look at the player, we need to use Vector3.up and not Vector3.forward (strange distortion of guard asset).
                 //gameObject.transform.LookAt(Player.transform, Vector3.up);
                 //transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, Time.deltaTime * 5);
             }
-        }
-        else if(currentState == States.SUSPECT)
-        {
-            Debug.Log("Something suspicious just happened!");
-            if (AnimContr.anim.GetCurrentAnimatorStateInfo(0).IsName("DroneGuard|Idle"))
+            else if (currentState == States.SUSPECT)
             {
+                Debug.Log("Something suspicious just happened!");
                 // DONE: Temporary action agent will take. Will change once we implement PCG and A* Search.
-                gameObject.transform.LookAt(SoundDetection.sourceOfSound.transform, Vector3.up);
-                transform.position = Vector3.MoveTowards(transform.position, SoundDetection.sourceOfSound.transform.position, Time.deltaTime * 5);
+                currentNPC.transform.LookAt(SoundDetection.sourceOfSound.transform, Vector3.up);
+                currentNPC.transform.position = Vector3.MoveTowards(currentNPC.transform.position, SoundDetection.sourceOfSound.transform.position, Time.deltaTime * 5);
 
                 // We will disable the flag if the agent reached the location of the sound.
-                if (Vector3.Distance(transform.position, SoundDetection.sourceOfSound.transform.position) == 0)
+                if (Vector3.Distance(currentNPC.transform.position, SoundDetection.sourceOfSound.transform.position) == 0)
                 {
                     SoundDetection.soundDetected = false;
 
                 }
-            }
 
-        }
-        else if(currentState == States.WIN)
-        {
-            Debug.Log("Player came into contact with guard! Player lost!");
-            TitleScreen.currentState = TitleScreen.GameState.LOST;
-            SceneManager.LoadScene(0);
+            }
+            else if (currentState == States.WIN)
+            {
+                Debug.Log("Player came into contact with guard! Player lost!");
+                TitleScreen.currentState = TitleScreen.GameState.LOST;
+                SceneManager.LoadScene(0);
+            }
         }
 
     }
 
     // Like Update, but occurs at the end of a frame.
-    void LateUpdate()
+    public State CheckPossibleStateChange(State currentState, List<Transition> transitions, GameObject currentNPC)
     {
 
         foreach(Transition transition in transitions)
         {
             // Set values for Condition fields.
             transition.conditional.Player = Player;
-            transition.conditional.currentNPC = gameObject;
+            transition.conditional.currentNPC = currentNPC;
             transition.conditional.elapsedTime = currentTime;
 
-            // Keeps track of the next state.
-            States nextState = transition.target.currentState;
             if (transition.conditional.Test())
             {
-                transition.target.enabled = true;
 
                 // Passes the current timeCounter value to the next state so that the agent continues to patrol smoothly.
-                transition.target.patrolling.timeCounter = patrolling.timeCounter;
-
+                //transition.target.patrolling.timeCounter = patrolling.timeCounter;
 
                 // Reset timer.
                 transition.conditional.elapsedTime = 0.0f;
 
-                this.enabled = false;
-
-                // Removes the current script from the guard.
-                Destroy(this);
-
-                // Removes all "State" scripts that are not the script we just enabled.
-                foreach(Transition t in transitions)
-                {
-                    if(t.target.currentState != nextState)
-                    {
-                        Destroy(t.target);
-                    }
-                }
-                return;
+                return transition.target;
             }
         }
+        return currentState;
     }
 
     #region Helper Methods
