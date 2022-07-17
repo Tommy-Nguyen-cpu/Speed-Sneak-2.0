@@ -103,7 +103,6 @@ public class State
     // Update is called once per frame
     public void StateAction(GameObject currentNPC)
     {
-        Debug.Log("Current Time: " + currentTime);
         // Checks to see if the guard animation is "WakeUp".
         if (AnimContr.anim.GetCurrentAnimatorStateInfo(0).IsName("DroneGuard|Idle"))
         {
@@ -116,7 +115,7 @@ public class State
 
                 // TODO: Temporary action agent will take. Will change once we implement PCG and A* Search.
 
-                //gameObject.transform.LookAt(Player.transform, Vector3.forward);
+                currentNPC.transform.LookAt(Player.transform, Vector3.up);
                 currentNPC.transform.position = Vector3.MoveTowards(currentNPC.transform.position, Player.transform.position, Time.deltaTime * 5);
             }
             else if (currentState == States.PATROL)
