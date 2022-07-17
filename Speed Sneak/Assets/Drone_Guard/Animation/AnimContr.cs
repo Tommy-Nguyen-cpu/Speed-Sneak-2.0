@@ -20,11 +20,6 @@ public class AnimContr : MonoBehaviour
         currentState = new State();
 
         transitions = currentState.SetUpState();
-
-        for(int i = 0; i< transitions.Count; i++)
-        {
-            Debug.Log($"{i} State: {transitions[i].target.currentState}");
-        }
     }
 
     // Update is called once per frame
@@ -53,8 +48,6 @@ public class AnimContr : MonoBehaviour
     void LateUpdate()
     {
         State newState = currentState.CheckPossibleStateChange(currentState, transitions, gameObject);
-
-        Debug.Log("Is new state null? " + (newState == null));
         currentState = newState;
     }
 }
