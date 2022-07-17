@@ -167,7 +167,7 @@ public class State
 
             if (transition.conditional.Test())
             {
-
+                // TODO: There is an issue where if the agent goes to the suspect state and switches to patrol state, it won't switch out of patrol state.
                 // Passes the current timeCounter value to the next state so that the agent continues to patrol smoothly.
                 //transition.target.patrolling.timeCounter = patrolling.timeCounter;
 
