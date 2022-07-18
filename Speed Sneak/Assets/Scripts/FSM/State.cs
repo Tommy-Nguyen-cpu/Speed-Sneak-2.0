@@ -40,7 +40,7 @@ public class State
     }
 
     // Called when the current instance of the script is loaded.
-    public List<Transition> SetUpState()
+    public List<Transition> SetUpState(Vector3 OriginalPosition)
     {
 
         // By default, the agent should be patrolling the field.
@@ -75,7 +75,7 @@ public class State
 
 
         // Sets the original position of the NPC.
-        patrolling.NPCOriginalPosition = AnimContr.NPCOriginalPosition;
+        patrolling.NPCOriginalPosition = OriginalPosition;
 
 
         State suspect = new State();
@@ -101,10 +101,10 @@ public class State
     }
 
     // Update is called once per frame
-    public void StateAction(GameObject currentNPC)
+    public void StateAction(GameObject currentNPC, Animator animationControllerForNPC)
     {
         // Checks to see if the guard animation is "WakeUp".
-        if (AnimContr.anim.GetCurrentAnimatorStateInfo(0).IsName("DroneGuard|Idle"))
+        if (animationControllerForNPC.GetCurrentAnimatorStateInfo(0).IsName("DroneGuard|Idle"))
         {
             currentTime += Time.deltaTime;
 
@@ -171,6 +171,7 @@ public class State
                 // Passes the current timeCounter value to the next state so that the agent continues to patrol smoothly.
                 //transition.target.patrolling.timeCounter = patrolling.timeCounter;
 
+                Debug.Log("Did something suspicious happen? " + SoundDetection.soundDetected);
                 // Reset timer.
                 currentTime = 0.0f;
                 transition.conditional.elapsedTime = 0.0f;

@@ -5,8 +5,8 @@ using UnityEngine;
 public class AnimContr : MonoBehaviour
 {
     // Start is called before the first frame update
-    public static Animator anim;
-    public static Vector3 NPCOriginalPosition;
+    public Animator anim;
+    public Vector3 NPCOriginalPosition;
 
     public List<Transition> transitions;
 
@@ -19,13 +19,13 @@ public class AnimContr : MonoBehaviour
 
         currentState = new State();
 
-        transitions = currentState.SetUpState();
+        transitions = currentState.SetUpState(NPCOriginalPosition);
     }
 
     // Update is called once per frame
     void Update()
     {
-        currentState.StateAction(gameObject);
+        currentState.StateAction(gameObject, anim);
         // TODO: Remove these onces the animations for the player and NPCs are down. These are here for reference.
         if (Input.GetKeyDown("s"))
         {
