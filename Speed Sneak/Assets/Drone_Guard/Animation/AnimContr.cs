@@ -26,22 +26,6 @@ public class AnimContr : MonoBehaviour
     void Update()
     {
         currentState.StateAction(gameObject, anim);
-        // TODO: Remove these onces the animations for the player and NPCs are down. These are here for reference.
-        if (Input.GetKeyDown("s"))
-        {
-            anim.Play("ShutDown");
-        }
-
-        if (Input.GetKeyDown("w"))
-        {
-            anim.Play("WakeUp");
-        }
-
-        if (Input.GetKeyDown("d"))
-        {
-            anim.Play("Destroyed");
-        }
-
     }
 
 
