@@ -15,7 +15,7 @@ public class PatrolMovement
 
     public void NPCPatrol(GameObject NPC)
     {
-        timeCounter += Time.deltaTime;
+        /*timeCounter += Time.deltaTime;
 
         // These two mathematical functions allow the agent to move in a circle (since the values of sine and consines go up but eventually go down).
         float CosX = (float)Math.Cos(timeCounter);
@@ -26,7 +26,7 @@ public class PatrolMovement
         float z = NPCOriginalPosition.z + (SinZ)*2f;
 
         NPC.transform.position = new Vector3(x, NPC.transform.position.y, z);
-        NPC.transform.Rotate(0.0f, -1*CosX, 0.0f, Space.World);
+        NPC.transform.Rotate(0.0f, -1*CosX, 0.0f, Space.World);*/
 
 
     }
