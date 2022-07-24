@@ -16,7 +16,6 @@ public class TitleScreen : MonoBehaviour
 
     void Awake()
     {
-        Debug.Log("Script woke up!");
         if(currentState == GameState.WON)
         {
             Text statusText = GameObject.Find("PlayerWinOrLose").GetComponent<Text>();

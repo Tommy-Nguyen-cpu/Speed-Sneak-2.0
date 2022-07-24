@@ -15,7 +15,7 @@ public class State
     /// </summary>
     public float currentTime = 0.0f;
 
-    // Initializes the "PatrolMovement" which allows the NPC to patrol in a circular motion.
+    // Initializes the "PatrolMovement" which allows the NPC to patrol.
     private PatrolMovement patrolling = new PatrolMovement();
 
     /// <summary>
@@ -34,12 +34,11 @@ public class State
 
     public State()
     {
-        // Each time a new State is instantiated, we will find the player gameobject and set the "Player" field to be this gameobject.
         Player = GameObject.Find("Player");
 
     }
 
-    // Called when the current instance of the script is loaded.
+
     public List<Transition> SetUpState(Vector3 OriginalPosition)
     {
 
@@ -124,10 +123,6 @@ public class State
                 Debug.Log("Guard is patrolling!");
 
                 patrolling.NPCPatrol(currentNPC);
-                // TODO: Temporary action agent will take. Will change once we implement PCG and A* Search.
-                // When having the agent look at the player, we need to use Vector3.up and not Vector3.forward (strange distortion of guard asset).
-                //gameObject.transform.LookAt(Player.transform, Vector3.up);
-                //transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, Time.deltaTime * 5);
             }
             else if (currentState == States.SUSPECT)
             {
@@ -146,7 +141,6 @@ public class State
             }
             else if (currentState == States.WIN)
             {
-                Debug.Log("Player came into contact with guard! Player lost!");
                 TitleScreen.currentState = TitleScreen.GameState.LOST;
                 SceneManager.LoadScene(0);
             }
@@ -154,7 +148,7 @@ public class State
 
     }
 
-    // Like Update, but occurs at the end of a frame.
+
     public State CheckPossibleStateChange(State currentState, List<Transition> transitions, GameObject currentNPC)
     {
 
@@ -168,9 +162,6 @@ public class State
             if (transition.conditional.Test())
             {
 
-                //transition.target.patrolling.timeCounter = patrolling.timeCounter;
-
-                Debug.Log("Did something suspicious happen? " + SoundDetection.soundDetected);
                 // Reset timer.
                 currentTime = 0.0f;
                 transition.conditional.elapsedTime = 0.0f;

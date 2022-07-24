@@ -18,7 +18,7 @@ public class WinCondition : Condition
 
         // Casts a ray that looks for collisions with the ray.
         bool collidedWithPlayer = Physics.Raycast(NPCPosition, currentNPC.transform.forward, out hit, .5f);
-        //Debug.Log("Did agent collide with player? " + collidedWithPlayer);
+
         //Debug.DrawRay(NPCPosition, currentNPC.transform.TransformDirection(Vector3.forward), Color.green, 2, false);
         if (hit.collider != null && hit.collider.name == "Player")
         {
