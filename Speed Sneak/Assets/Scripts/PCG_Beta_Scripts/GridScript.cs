@@ -14,9 +14,25 @@ public class GridScript : MonoBehaviour
     char lastDir = 'N';
     //Thus weighted value determines how likely the alg will iterate in one direction.
     //It decreases with each successful movement in the same direction, resets after a turn to it's initial value
-    float weightContinue = 0.82f;
-    
-    
+    float weightContinue = 0.82f; 
+
+    int consecutive=1;
+    //used to determine length;
+    int pathVal=0;
+    //used to call routelist, stored in StraightAway
+
+    public Dictionary <int, Vector3> RouteList = new Dictionary <int, Vector3>();
+    //dictionary for storing locations of total route
+    public Dictionary <int, char> RouteDir = new Dictionary <int, char>();
+    //relates route to iterator direcetion
+    public Dictionary <int, int> RouteRowPos = new Dictionary <int, int>();
+    //relates route to value in array 
+
+    public Dictionary <int, int> StraightAway = new Dictionary <int, int>();
+    //will store the first and last entry of a straightaway within grid
+    //crucial for valid geometry detection!
+
+
     void Start()
     {
         for (int i = 0; i < roomFar; i++) {
@@ -33,7 +49,10 @@ public class GridScript : MonoBehaviour
         }
     FirstMove();
         //TIME TO CUT A PATH
-        
+    HallMobs();
+        //Finds valid hall mob positions, generates simple ai and hideouts
+    SideRoute();
+        //Generates Loops, spawns patrol ai
     }
     //
     void FirstMove(){
@@ -52,10 +71,22 @@ public class GridScript : MonoBehaviour
         int iteration = roomFar/2;
         //while still within the vertical bounds of the grid, continue the algorithm.
         while (iteration < (roomFar*roomSide)) {
+
         //remove *current* wall piece
-        GameObject.Destroy(Row[iteration]);   
-        //use newLocation weighted alg to 
-        iteration = newLocation(iteration);
+        GameObject.Destroy(Row[iteration]);
+        //remove tile
+
+
+        //STORE VALUES TO DICTIONARIES
+        Vector3 Position = new Vector3 (1.0f*(iteration % roomFar), 0f, 1.0f*(iteration / roomFar));
+        RouteList.Add(pathVal, Position); //stores locationt to entry
+        RouteRowPos.Add(pathVal, iteration); //stores iteration value to entry
+        RouteDir.Add(pathVal, lastDir);
+        
+      
+        //ITERATE 
+        pathVal++; //used for dictionaries
+        iteration = newLocation(iteration); //determines new location of algorithm
     }
     }  
 
@@ -65,6 +96,12 @@ public class GridScript : MonoBehaviour
         //IF RANGE > WEIGHTCONTINUE 
         if (range>weightContinue){
             weightContinue = 0.82f;
+
+            StraightAway.Add(pathVal,pathVal-consecutive);
+            //stores START AND END POINTS
+            consecutive = 1;
+
+
        //     if (lastDir = 'L' || lastDir == 'R') {
             if (lastDir != 'F') { 
                 lastLocal = lastLocal+roomFar;
@@ -93,6 +130,8 @@ public class GridScript : MonoBehaviour
             weightContinue = weightContinue*0.8f;
             //^ Scale WeightContinue down by 4/5's it's original size, so it's more likely to change next time
             //Then, move the iterator to it's next location.
+            consecutive++;
+            //keeps stored value
             if (lastDir == 'F') lastLocal=lastLocal+roomFar;
             if (lastDir =='L') { 
                     if (lastLocal % roomFar != 0) lastLocal=lastLocal-1; 
@@ -107,11 +146,24 @@ public class GridScript : MonoBehaviour
         }
         return lastLocal;
     }
+
+     void establishStretch(){
+
+     }
     
      void HallMobs(){
      }
     
      void SideRoute(){
+      //  for (int i = 0; i<pathVal;i++){ 
+    foreach (KeyValuePair<int, int> entry in StraightAway) { 
+        int N = entry.Key - entry.Value;
+        if (N >= 4) { //VALID 
+
+        }
+
+
+        }
      }
 
 
