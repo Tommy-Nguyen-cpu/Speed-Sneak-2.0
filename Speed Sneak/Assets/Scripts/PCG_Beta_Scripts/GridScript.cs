@@ -32,6 +32,8 @@ public class GridScript : MonoBehaviour
     //will store the first and last entry of a straightaway within grid
     //crucial for valid geometry detection!
 
+    public GameObject BasicMob;
+    public GameObject PatrolAiMob;
 
     void Start()
     {
@@ -82,6 +84,8 @@ public class GridScript : MonoBehaviour
         RouteList.Add(pathVal, Position); //stores locationt to entry
         RouteRowPos.Add(pathVal, iteration); //stores iteration value to entry
         RouteDir.Add(pathVal, lastDir);
+
+
         
       
         //ITERATE 
@@ -152,14 +156,45 @@ public class GridScript : MonoBehaviour
      }
     
      void HallMobs(){
+        foreach (KeyValuePair<int, int> entry in StraightAway) { 
+        int N = entry.Key - entry.Value;
+        if (N >= 5) { //VALID 
+            //first, determine midpoint
+            int midPoint = entry.Key-N/2;
+            char TileDir = RouteDir[midPoint];
+            int rowPos = RouteRowPos[midPoint];
+            Vector3 AiPos = (RouteList[midPoint]);
+
+            //SPAWN ENTITY
+            //TODO
+
+            if (TileDir == 'L' || TileDir == 'R') {
+                
+            }
+            else {
+
+            }
+
+        }
+
+
+        }
      }
     
      void SideRoute(){
       //  for (int i = 0; i<pathVal;i++){ 
     foreach (KeyValuePair<int, int> entry in StraightAway) { 
         int N = entry.Key - entry.Value;
-        if (N >= 4) { //VALID 
+        if (N == 4) { //VALID 
+            int Top = entry.Key;
+            int Bottom = entry.Value;
 
+            char TopDir = RouteDir[Top];
+            int TopPos = RouteRowPos[Top];
+
+            char BottomDir = RouteDir[Top];
+            int BottomPos = RouteRowPos[Top];
+           
         }
 
 
