@@ -9,7 +9,6 @@ public class TitleScreen : MonoBehaviour
 
     public enum GameState
     {
-<<<<<<< Updated upstream
         WON, LOST, NEITHER
     }
 
@@ -17,7 +16,6 @@ public class TitleScreen : MonoBehaviour
 
     void Awake()
     {
-        Debug.Log("Script woke up!");
         if(currentState == GameState.WON)
         {
             Text statusText = GameObject.Find("PlayerWinOrLose").GetComponent<Text>();
@@ -38,8 +36,6 @@ public class TitleScreen : MonoBehaviour
     /// </summary>
     public void SwitchTheClass()
     {
-=======
->>>>>>> Stashed changes
         SceneManager.LoadScene(1);
     }
 

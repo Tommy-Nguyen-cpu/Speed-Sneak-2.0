@@ -18,13 +18,13 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.UpArrow))
         {
             anim.Play("RunAndAim");
-            transform.Translate(Vector3.forward * Time.deltaTime * (Input.GetKey(KeyCode.RightShift) || Input.GetKey(KeyCode.LeftShift) ? 20 : 1));
+            transform.Translate(Vector3.forward * Time.deltaTime * 10);
         }
 
         if (Input.GetKey(KeyCode.DownArrow))
         {
             anim.Play("RunAndAim");
-            transform.Translate(Vector3.back * Time.deltaTime * (Input.GetKey(KeyCode.RightShift) || Input.GetKey(KeyCode.LeftShift) ? 20 : 1));
+            transform.Translate(Vector3.back * Time.deltaTime * 10);
         }
 
         if (Input.GetKey(KeyCode.LeftArrow))
