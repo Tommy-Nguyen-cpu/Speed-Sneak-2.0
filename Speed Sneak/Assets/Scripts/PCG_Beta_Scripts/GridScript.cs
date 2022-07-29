@@ -16,7 +16,7 @@ public class GridScript : MonoBehaviour
     //It decreases with each successful movement in the same direction, resets after a turn to it's initial value
     float weightContinue = 0.82f; 
 
-    int consecutive=1;
+    int consecutive=0;
     //used to determine length;
     int pathVal=0;
     //used to call routelist, stored in StraightAway
@@ -102,8 +102,13 @@ public class GridScript : MonoBehaviour
             weightContinue = 0.82f;
 
             StraightAway.Add(pathVal,pathVal-consecutive);
+       //     Debug.Log(pathVal);
+       //     Debug.Log(pathVal-consecutive);
+            //confirms distances work
+
+
             //stores START AND END POINTS
-            consecutive = 1;
+            consecutive = 0;
 
 
        //     if (lastDir = 'L' || lastDir == 'R') {
@@ -134,7 +139,7 @@ public class GridScript : MonoBehaviour
             weightContinue = weightContinue*0.8f;
             //^ Scale WeightContinue down by 4/5's it's original size, so it's more likely to change next time
             //Then, move the iterator to it's next location.
-            consecutive++;
+           
             //keeps stored value
             if (lastDir == 'F') lastLocal=lastLocal+roomFar;
             if (lastDir =='L') { 
@@ -148,6 +153,7 @@ public class GridScript : MonoBehaviour
                     }
             }
         }
+        consecutive++;
         return lastLocal;
     }
 
@@ -160,18 +166,41 @@ public class GridScript : MonoBehaviour
         int N = entry.Key - entry.Value;
         if (N >= 5) { //VALID 
             //first, determine midpoint
-            int midPoint = entry.Key-N/2;
+            int midPoint = (entry.Key)-((N/2)+1); 
+            //+1 is because we wnat total blocks, not distance from point A to point B.
+            //if we had point 6 to point 1, that's 5 blocks difference
+            //but the hallway is still 6 blocks long total, so we need to offset it by one!
             char TileDir = RouteDir[midPoint];
             int rowPos = RouteRowPos[midPoint];
             Vector3 AiPos = (RouteList[midPoint]);
 
             //SPAWN ENTITY
             //TODO
+            //Debug.Log(entry.Key);
+            //Debug.Log(entry.Value);
+            //Debug.Log(N);
+            //Debug.Log(midPoint);
 
+            Instantiate(BasicMob,AiPos,Quaternion.identity);
             if (TileDir == 'L' || TileDir == 'R') {
-                
+                if (rowPos > (roomFar*roomSide)/2){
+                GameObject.Destroy(Row[rowPos-roomSide]);
+                GameObject.Destroy(Row[rowPos-roomSide*2]);
+                }
+                else {
+                GameObject.Destroy(Row[rowPos+roomSide]);
+                GameObject.Destroy(Row[rowPos+roomSide*2]);
+                }
             }
             else {
+   //            if (rowPos % roomSide > (roomSide)/2){
+   //             GameObject.Destroy(Row[rowPos-1]);
+   //             GameObject.Destroy(Row[rowPos-2]);
+   //             }
+   //             else {
+   //             GameObject.Destroy(Row[rowPos+1]);
+   //             GameObject.Destroy(Row[rowPos+2]);
+   //             } 
 
             }
 
@@ -194,7 +223,48 @@ public class GridScript : MonoBehaviour
 
             char BottomDir = RouteDir[Top];
             int BottomPos = RouteRowPos[Top];
-           
+
+            if (BottomPos > roomFar*roomSide/4) { 
+            //ensures these sequences will not spawn at the start of the map.
+                if (BottomDir == 'L' || BottomDir == 'R') {
+                    if (BottomPos > (roomFar*roomSide/2 - 2)){
+                    GameObject.Destroy(Row[TopPos-roomSide]);
+                    GameObject.Destroy(Row[TopPos-roomSide*2]);
+                    GameObject.Destroy(Row[BottomPos-roomSide]);
+                    GameObject.Destroy(Row[BottomPos-roomSide*2]);
+                        if (BottomDir == 'L') {
+                        GameObject.Destroy(Row[(BottomPos-roomSide*2)-1]);
+                        GameObject.Destroy(Row[(BottomPos-roomSide*2)-2]);
+                        }
+                        else {
+                        GameObject.Destroy(Row[(BottomPos-roomSide*2)+1]);
+                        GameObject.Destroy(Row[(BottomPos-roomSide*2)+2]);    
+                        }
+                    }
+                    else {
+                     
+        //            GameObject.Destroy(Row[TopPos+roomSide]);
+        //            GameObject.Destroy(Row[TopPos+roomSide*2]);
+        //            GameObject.Destroy(Row[BottomPos+roomSide]);
+        //            GameObject.Destroy(Row[BottomPos+roomSide*2]);
+
+                    }
+                    }
+                else {
+          //          if (rowPos % roomSide > (roomSide)/2){
+          //          GameObject.Destroy(Row[rowPos-1]);
+          //          GameObject.Destroy(Row[rowPos-2]);
+          //          }
+          //          else {
+          //          GameObject.Destroy(Row[rowPos+1]);
+          //          GameObject.Destroy(Row[rowPos+2]);
+          //          } 
+
+            }
+            
+
+
+            }
         }
 
 
