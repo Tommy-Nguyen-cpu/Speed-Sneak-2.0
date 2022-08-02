@@ -5,11 +5,11 @@ using UnityEngine;
 public class GridScript : MonoBehaviour
 {
     //Each slow in Row is dedicated to a single chunk, of object wall
-    public GameObject[] Row = new GameObject[400];//15^2
+    public GameObject[] Row = new GameObject[625];//15^2
     public GameObject Walls;
     //as this is a single array, keep these dimensions square
-    int roomFar = 20;
-    int roomSide = 20;
+    int roomFar = 25;
+    int roomSide = 25;
     // Start is called before the first frame update
     char lastDir = 'N';
     //Thus weighted value determines how likely the alg will iterate in one direction.
@@ -35,6 +35,8 @@ public class GridScript : MonoBehaviour
     public GameObject BasicMob;
     public GameObject PatrolAiMob;
 
+  //  bool doesSide = false;
+
     void Start()
     {
         for (int i = 0; i < roomFar; i++) {
@@ -42,7 +44,7 @@ public class GridScript : MonoBehaviour
           
 
 //            Vector3 Position = new Vector3 (1.0f*(float j), 0.0f, 1.0*(float i));
-            Vector3 Position = new Vector3 (1.0f*j, 0f, 1.0f*i);
+            Vector3 Position = new Vector3 (1.1f*j, 0f, 1.1f*i);
 
             int f = (i*roomFar)+j; //each row consits of j entries, with i amount of rows      
             Row[f] = Instantiate(Walls,Position,Quaternion.identity);
@@ -78,19 +80,19 @@ public class GridScript : MonoBehaviour
         GameObject.Destroy(Row[iteration]);
         //remove tile
 
-
+        pathVal++; //used for dictionaries   
         //STORE VALUES TO DICTIONARIES
-        Vector3 Position = new Vector3 (1.0f*(iteration % roomFar), 0f, 1.0f*(iteration / roomFar));
+        Vector3 Position = new Vector3 (1.1f*(iteration % roomFar), 0f, 1.1f*(iteration / roomFar));
         RouteList.Add(pathVal, Position); //stores locationt to entry
         RouteRowPos.Add(pathVal, iteration); //stores iteration value to entry
         RouteDir.Add(pathVal, lastDir);
 
 
-        
+       // Debug.Log(iteration);
       
         //ITERATE 
-        pathVal++; //used for dictionaries
         iteration = newLocation(iteration); //determines new location of algorithm
+    
     }
     }  
 
@@ -98,12 +100,12 @@ public class GridScript : MonoBehaviour
         float range = Random.Range(0.0f, 1.0f);
         //compares against the weighted value. 
         //IF RANGE > WEIGHTCONTINUE 
-        if (range>weightContinue){
+        if (range>=weightContinue){
             weightContinue = 0.82f;
 
-            StraightAway.Add(pathVal,pathVal-consecutive);
-       //     Debug.Log(pathVal);
-       //     Debug.Log(pathVal-consecutive);
+            StraightAway.Add(pathVal,(pathVal-consecutive));
+    //        Debug.Log("Top: " + RouteDir[pathVal]);
+    //        Debug.Log("Bottom: " + RouteDir[pathVal-consecutive]);
             //confirms distances work
 
 
@@ -157,16 +159,22 @@ public class GridScript : MonoBehaviour
         return lastLocal;
     }
 
-     void establishStretch(){
-
-     }
     
      void HallMobs(){
         foreach (KeyValuePair<int, int> entry in StraightAway) { 
-        int N = entry.Key - entry.Value;
-        if (N >= 5) { //VALID 
+        int N = entry.Key - entry.Value + 1;
+     //       int Chance = 0;
+     //   if (N == 6) {
+     //       Chance = Random.Range(0,2);
+     //       N = N + Chance;
+     //   }
+     //   int bench = 6;
+     //   if (!doesSide) bench = 5;
+
+        if (N >= 6) { //VALID
+          //not in starting row
             //first, determine midpoint
-            int midPoint = (entry.Key)-((N/2)+1); 
+            int midPoint = (entry.Key)-((N/2)-1); //+ chance 
             //+1 is because we wnat total blocks, not distance from point A to point B.
             //if we had point 6 to point 1, that's 5 blocks difference
             //but the hallway is still 6 blocks long total, so we need to offset it by one!
@@ -174,15 +182,29 @@ public class GridScript : MonoBehaviour
             int rowPos = RouteRowPos[midPoint];
             Vector3 AiPos = (RouteList[midPoint]);
 
+            bool BoundCheckTop = ((RouteRowPos[entry.Key] % roomSide) > 0 && RouteRowPos[entry.Key] % roomSide < roomSide-1);
+            bool BoundCheckBottom = ((RouteRowPos[entry.Value] % roomSide) > 0 && RouteRowPos[entry.Value] % roomSide < roomSide-1);
+
+
             //SPAWN ENTITY
             //TODO
-            //Debug.Log(entry.Key);
-            //Debug.Log(entry.Value);
-            //Debug.Log(N);
-            //Debug.Log(midPoint);
+            //Debug.Log(entry.Key+": "+RouteRowPos[entry.Key]);
+            //Debug.Log(entry.Value+": "+RouteRowPos[entry.Value]);
+        
+           if (RouteRowPos[entry.Value] > (roomSide-1) && BoundCheckTop && BoundCheckBottom) { 
 
-            Instantiate(BasicMob,AiPos,Quaternion.identity);
+          
             if (TileDir == 'L' || TileDir == 'R') {
+                if (TileDir == 'L'){
+                Vector3 rotationVectorL = new Vector3(0, 90, 0);
+                Quaternion rotation = Quaternion.Euler(rotationVectorL);
+                Instantiate(BasicMob,AiPos,rotation);
+                } else {
+                Vector3 rotationVectorR = new Vector3(0, 270, 0);
+                Quaternion rotation = Quaternion.Euler(rotationVectorR);
+                Instantiate(BasicMob,AiPos,rotation);
+                //spawn entity in  proper orientation
+                }
                 if (rowPos > (roomFar*roomSide)/2){
                 GameObject.Destroy(Row[rowPos-roomSide]);
                 GameObject.Destroy(Row[rowPos-roomSide*2]);
@@ -191,86 +213,97 @@ public class GridScript : MonoBehaviour
                 GameObject.Destroy(Row[rowPos+roomSide]);
                 GameObject.Destroy(Row[rowPos+roomSide*2]);
                 }
+                //determine direction of "cubby" for player to hide in
+
             }
             else {
-   //            if (rowPos % roomSide > (roomSide)/2){
-   //             GameObject.Destroy(Row[rowPos-1]);
-   //             GameObject.Destroy(Row[rowPos-2]);
-   //             }
-   //             else {
-   //             GameObject.Destroy(Row[rowPos+1]);
-   //             GameObject.Destroy(Row[rowPos+2]);
-   //             } 
+                Instantiate(BasicMob,AiPos,Quaternion.identity);
+                if (rowPos % roomSide > (roomSide)/2){
+                GameObject.Destroy(Row[rowPos-1]);
+                GameObject.Destroy(Row[rowPos-2]);
+                }
+                else {
+                GameObject.Destroy(Row[rowPos+1]);
+                GameObject.Destroy(Row[rowPos+2]);
+                } 
 
             }
-
+         }
         }
 
 
         }
      }
     
-     void SideRoute(){
-      //  for (int i = 0; i<pathVal;i++){ 
-    foreach (KeyValuePair<int, int> entry in StraightAway) { 
-        int N = entry.Key - entry.Value;
-        if (N == 4) { //VALID 
+
+    void SideRoute(){
+     foreach (KeyValuePair<int, int> entry in StraightAway) { 
+        int N = entry.Key - entry.Value + 1;
+
+        if (N == 4 && RouteDir[entry.Key] == 'F') { //VALID 
+
             int Top = entry.Key;
             int Bottom = entry.Value;
 
             char TopDir = RouteDir[Top];
             int TopPos = RouteRowPos[Top];
 
-            char BottomDir = RouteDir[Top];
-            int BottomPos = RouteRowPos[Top];
-
-            if (BottomPos > roomFar*roomSide/4) { 
-            //ensures these sequences will not spawn at the start of the map.
-                if (BottomDir == 'L' || BottomDir == 'R') {
-                    if (BottomPos > (roomFar*roomSide/2 - 2)){
-                    GameObject.Destroy(Row[TopPos-roomSide]);
-                    GameObject.Destroy(Row[TopPos-roomSide*2]);
-                    GameObject.Destroy(Row[BottomPos-roomSide]);
-                    GameObject.Destroy(Row[BottomPos-roomSide*2]);
-                        if (BottomDir == 'L') {
-                        GameObject.Destroy(Row[(BottomPos-roomSide*2)-1]);
-                        GameObject.Destroy(Row[(BottomPos-roomSide*2)-2]);
-                        }
-                        else {
-                        GameObject.Destroy(Row[(BottomPos-roomSide*2)+1]);
-                        GameObject.Destroy(Row[(BottomPos-roomSide*2)+2]);    
-                        }
-                    }
-                    else {
-                     
-        //            GameObject.Destroy(Row[TopPos+roomSide]);
-        //            GameObject.Destroy(Row[TopPos+roomSide*2]);
-        //            GameObject.Destroy(Row[BottomPos+roomSide]);
-        //            GameObject.Destroy(Row[BottomPos+roomSide*2]);
-
-                    }
-                    }
-                else {
-          //          if (rowPos % roomSide > (roomSide)/2){
-          //          GameObject.Destroy(Row[rowPos-1]);
-          //          GameObject.Destroy(Row[rowPos-2]);
-          //          }
-          //          else {
-          //          GameObject.Destroy(Row[rowPos+1]);
-          //          GameObject.Destroy(Row[rowPos+2]);
-          //          } 
-
-            }
+            char BottomDir = RouteDir[Bottom];
+            int BottomPos = RouteRowPos[Bottom];
             
+            Vector3 TopGeo = (RouteList[Top]);
+            Vector3 BottomGeo = (RouteList[Bottom]);
 
 
+            
+                        
+            //ensures these sequences will not spawn at the start of the map.
+            if (BottomPos > (roomSide*4)){
+                if (BottomDir == 'L' && (BottomPos % roomSide) > 2 && (TopPos % roomSide) > 2) {
+                     Vector3 rotationVectorL = new Vector3(0, 90, 0);
+                    Quaternion rotation = Quaternion.Euler(rotationVectorL);
+                    Instantiate(PatrolAiMob,BottomGeo,rotation);    
+                    GameObject.Destroy(Row[BottomPos-1]);
+                    GameObject.Destroy(Row[BottomPos-2]);
+                    GameObject.Destroy(Row[BottomPos-3]);
+
+                    GameObject.Destroy(Row[TopPos-1]);
+                    GameObject.Destroy(Row[TopPos-2]);
+                    GameObject.Destroy(Row[TopPos-3]);
+                    
+                    GameObject.Destroy(Row[(TopPos-3)-roomSide]);
+                    GameObject.Destroy(Row[(BottomPos-3)+roomSide]);
+
+
+                    Debug.Log(entry.Key + " " + Top + " " + TopPos);
+                    Debug.Log(entry.Value + " " + Bottom + " " + BottomPos);
+     //               doesSide = true;
+                } else if (BottomDir == 'R' && (BottomPos % roomSide) < (roomSide - 2) && (TopPos % roomSide) < (roomSide - 2)) {
+                    Vector3 rotationVectorR = new Vector3(0, 270, 0);
+                    Quaternion rotation = Quaternion.Euler(rotationVectorR);
+                    Instantiate(PatrolAiMob,BottomGeo,rotation);    
+                    GameObject.Destroy(Row[BottomPos+1]);
+                    GameObject.Destroy(Row[BottomPos+2]);
+                    GameObject.Destroy(Row[BottomPos+3]);
+
+                    GameObject.Destroy(Row[TopPos+1]);
+                    GameObject.Destroy(Row[TopPos+2]);
+                    GameObject.Destroy(Row[TopPos+3]);
+                    
+                    GameObject.Destroy(Row[(TopPos+3)-roomSide]);
+                    GameObject.Destroy(Row[(BottomPos+3)+roomSide]);
+
+                    Debug.Log(entry.Key + " " + Top + " " + TopPos);
+                    Debug.Log(entry.Value + " " + Bottom + " " + BottomPos);
+     //               doesSide=true;
+                }
+            
             }
-        }
 
 
         }
      }
-
+    }
 
 
     ///////////////////////////////////////
