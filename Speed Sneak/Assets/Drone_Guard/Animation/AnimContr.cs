@@ -10,6 +10,8 @@ public class AnimContr : MonoBehaviour
 
     public List<Transition> transitions;
 
+    public char rotationDirection;
+
     public State currentState;
     void Start()
     {
@@ -25,7 +27,7 @@ public class AnimContr : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        currentState.StateAction(gameObject, anim);
+        currentState.StateAction(gameObject, rotationDirection, anim);
     }
 
 
