@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BasicMobController : MonoBehaviour
 {
@@ -12,4 +13,14 @@ public class BasicMobController : MonoBehaviour
     }
 
 
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.name.Contains("Player"))
+        {
+            TitleScreen.currentState = TitleScreen.GameState.LOST;
+            SceneManager.LoadScene(0);
+            return;
+        }
+        transform.Rotate(Vector3.up, 180);
+    }
 }
