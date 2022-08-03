@@ -174,3 +174,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88982ff3c3f461446897b9878a43dd0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  anim: {fileID: 0}
+  NPCOriginalPosition: {x: 0, y: 0, z: 0}
+  Player: {fileID: 546695839705497663, guid: d1f5f9f4a0d14fa4ca8c94d300bde143, type: 3}
