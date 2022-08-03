@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -42,6 +43,15 @@ public class PlayerController : MonoBehaviour
             anim.Play("Standing");
         }
 
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.name.Contains("Goal"))
+        {
+            SceneManager.LoadScene(1);
+            return;
+        }
     }
 
 }
