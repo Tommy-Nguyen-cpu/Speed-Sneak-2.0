@@ -32,7 +32,6 @@ public class PatrolMovement
             Debug.DrawRay(NPCPosition, NPC.transform.TransformDirection(raycastDirection), Color.green, 2, false);
             if (hitLeft.collider == null)
             {
-                Debug.Log("Rotation: " + rotationDirection);
                 NPC.transform.Rotate(Vector3.up, rotationDirection == 'L' ? -90 : 90);
             }
             else
