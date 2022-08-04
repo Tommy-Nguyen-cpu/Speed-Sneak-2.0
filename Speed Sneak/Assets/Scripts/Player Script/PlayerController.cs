@@ -18,24 +18,30 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.UpArrow))
         {
+            rotatePlayer(KeyCode.UpArrow, 0f);
             anim.Play("RunAndAim");
             transform.Translate(Vector3.forward * Time.deltaTime * 5);
         }
 
         if (Input.GetKey(KeyCode.DownArrow))
         {
+            rotatePlayer(KeyCode.DownArrow, 180f);
             anim.Play("RunAndAim");
-            transform.Translate(Vector3.back * Time.deltaTime * 5);
+            transform.Translate(Vector3.forward * Time.deltaTime * 5);
         }
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            transform.Rotate(Vector3.up, -3);
+            anim.Play("RunAndAim");
+            rotatePlayer(KeyCode.LeftArrow, -90f);
+            transform.Translate(Vector3.forward * Time.deltaTime * 5);
         }
 
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            transform.Rotate(Vector3.up, 3);
+            anim.Play("RunAndAim");
+            rotatePlayer(KeyCode.RightArrow, 90f);
+            transform.Translate(Vector3.forward * Time.deltaTime * 5);
         }
 
         if (!Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.DownArrow) && !Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow))
@@ -53,5 +59,39 @@ public class PlayerController : MonoBehaviour
             return;
         }
     }
+
+
+    #region
+
+    /// <summary>
+    /// Keeps track of which key was previously pressed.
+    /// </summary>
+    private KeyCode? previousKeyPressed = null;
+
+    /// <summary>
+    /// Keeps track of previous orientation of the player.
+    /// </summary>
+    private float previousRotation = 0;
+
+    /// <summary>
+    /// Rotates the player.
+    /// </summary>
+    /// <param name="pressedKey"></param>
+    /// <param name="rotationDirection"></param>
+    private void rotatePlayer(KeyCode? pressedKey, float rotationDirection)
+    {
+        if(previousKeyPressed == null || previousKeyPressed != pressedKey)
+        {
+            // Resets the previous rotation so that the player faces forward again.
+            transform.Rotate(Vector3.up, (-1 * previousRotation));
+            previousKeyPressed = pressedKey;
+            previousRotation = rotationDirection;
+
+            // Rotates in the new direction.
+            transform.Rotate(Vector3.up, rotationDirection);
+        }
+    }
+
+    #endregion
 
 }
