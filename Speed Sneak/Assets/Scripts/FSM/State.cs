@@ -34,7 +34,7 @@ public class State
 
     public State()
     {
-        Player = GameObject.Find("Player");
+        Player = GameObject.Find("Player(Clone)");
 
     }
 
@@ -100,7 +100,7 @@ public class State
     }
 
     // Update is called once per frame
-    public void StateAction(GameObject currentNPC, Animator animationControllerForNPC)
+    public void StateAction(GameObject currentNPC, char rotationDirection, Animator animationControllerForNPC)
     {
         // Checks to see if the guard animation is "WakeUp".
         if (animationControllerForNPC.GetCurrentAnimatorStateInfo(0).IsName("DroneGuard|Idle"))
@@ -115,13 +115,17 @@ public class State
                 // TODO: Temporary action agent will take. Will change once we implement PCG and A* Search.
 
                 currentNPC.transform.LookAt(Player.transform, Vector3.up);
-                currentNPC.transform.position = Vector3.MoveTowards(currentNPC.transform.position, Player.transform.position, Time.deltaTime * 5);
+                currentNPC.transform.position = Vector3.MoveTowards(currentNPC.transform.position, Player.transform.position, Time.deltaTime * 3);
             }
             else if (currentState == States.PATROL)
             {
                 // TODO: Implement behaviour for patrol state.
                 Debug.Log("Guard is patrolling!");
 
+                if(patrolling.rotationDirection == '\0')
+                {
+                    patrolling.rotationDirection = rotationDirection;
+                }
                 patrolling.NPCPatrol(currentNPC);
             }
             else if (currentState == States.SUSPECT)
