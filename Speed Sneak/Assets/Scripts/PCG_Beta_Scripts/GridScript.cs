@@ -80,7 +80,7 @@ public class GridScript : MonoBehaviour
 
         // TOMMY
         // Generate player at midpoint at beginning of map.
-        Instantiate(Player, new Vector3((iteration*1f+1f), 1f, 0f), Quaternion.identity);
+        Instantiate(Player, new Vector3((iteration*1f+1f), -1f, 0f), Quaternion.identity);
 
         //while still within the vertical bounds of the grid, continue the algorithm.
         while (iteration < (roomFar*roomSide)) {
