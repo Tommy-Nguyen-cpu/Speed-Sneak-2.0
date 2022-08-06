@@ -25,7 +25,7 @@ public class PatrolMovement
         // Casts a ray that looks for collisions with the ray.
         bool collidedWithWallForward = Physics.Raycast(NPCPosition, NPC.transform.TransformDirection(Vector3.forward), out hitForward, .5f);
         Debug.DrawRay(NPCPosition, NPC.transform.TransformDirection(Vector3.forward), Color.red, 2, false);
-        if (hitForward.collider != null && (hitForward.collider.name == "BaseTest(Clone)" || hitForward.collider.name.Contains("Wall")))
+        if (hitForward.collider != null && (hitForward.collider.name == "BaseTest(Clone)" || hitForward.collider.name.Contains("Wall") || hitForward.collider.name.Contains("Goal")))
         {
             // Casts a ray that looks for collisions with the ray.
             bool collidedWithWallLeft = Physics.Raycast(NPCPosition, NPC.transform.TransformDirection(raycastDirection), out hitLeft, 1f);
