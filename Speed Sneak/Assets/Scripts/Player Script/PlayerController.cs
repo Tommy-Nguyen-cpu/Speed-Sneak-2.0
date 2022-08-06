@@ -58,6 +58,12 @@ public class PlayerController : MonoBehaviour
             SceneManager.LoadScene(1);
             return;
         }
+        else if (collision.collider.name.Contains("Fog"))
+        {
+            TitleScreen.currentState = TitleScreen.GameState.LOST;
+            SceneManager.LoadScene(0);
+            return;
+        }
     }
 
 
