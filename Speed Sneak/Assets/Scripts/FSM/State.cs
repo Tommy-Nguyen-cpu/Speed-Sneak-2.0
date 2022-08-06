@@ -109,19 +109,12 @@ public class State
 
             if (currentState == States.CHASE)
             {
-                // TODO: Implement behaviour for chase state.
-                Debug.Log("Guard is chasing the player!");
-
-                // TODO: Temporary action agent will take. Will change once we implement PCG and A* Search.
 
                 currentNPC.transform.LookAt(Player.transform, Vector3.up);
                 currentNPC.transform.position = Vector3.MoveTowards(currentNPC.transform.position, Player.transform.position, Time.deltaTime * 3);
             }
             else if (currentState == States.PATROL)
             {
-                // TODO: Implement behaviour for patrol state.
-                Debug.Log("Guard is patrolling!");
-
                 if(patrolling.rotationDirection == '\0')
                 {
                     patrolling.rotationDirection = rotationDirection;
