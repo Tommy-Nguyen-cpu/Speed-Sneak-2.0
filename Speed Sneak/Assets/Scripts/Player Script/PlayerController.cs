@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.UpArrow))
         {
+            // No rotation.
             rotatePlayer(KeyCode.UpArrow, 0f);
             anim.Play("RunAndAim");
             transform.Translate(Vector3.forward * Time.deltaTime * 5);
@@ -25,6 +26,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.DownArrow))
         {
+            // Rotating to face backwards.
             rotatePlayer(KeyCode.DownArrow, 180f);
             anim.Play("RunAndAim");
             transform.Translate(Vector3.forward * Time.deltaTime * 5);
@@ -33,6 +35,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             anim.Play("RunAndAim");
+            
+            // Rotate left.
             rotatePlayer(KeyCode.LeftArrow, -90f);
             transform.Translate(Vector3.forward * Time.deltaTime * 5);
         }
@@ -40,6 +44,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.RightArrow))
         {
             anim.Play("RunAndAim");
+
+            // Rotate right.
             rotatePlayer(KeyCode.RightArrow, 90f);
             transform.Translate(Vector3.forward * Time.deltaTime * 5);
         }
@@ -51,6 +57,10 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Checks to see if the player hits the "Goal" or "Fog". Will change to the respective scene if they hit either.
+    /// </summary>
+    /// <param name="collision"></param>
     void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.name.Contains("Goal"))
