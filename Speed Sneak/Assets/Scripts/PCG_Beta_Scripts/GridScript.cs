@@ -107,8 +107,6 @@ public class GridScript : MonoBehaviour
         RouteRowPos.Add(pathVal, iteration); //stores iteration value to entry
         RouteDir.Add(pathVal, lastDir);
 
-
-       // Debug.Log(iteration);
       
         //ITERATE 
         iteration = newLocation(iteration); //determines new location of algorithm
@@ -124,8 +122,7 @@ public class GridScript : MonoBehaviour
             weightContinue = 0.82f;
 
             StraightAway.Add(pathVal,(pathVal-consecutive));
-    //        Debug.Log("Top: " + RouteDir[pathVal]);
-    //        Debug.Log("Bottom: " + RouteDir[pathVal-consecutive]);
+
             //confirms distances work
 
 
@@ -204,12 +201,6 @@ public class GridScript : MonoBehaviour
 
             bool BoundCheckTop = ((RouteRowPos[entry.Key] % roomSide) > 0 && RouteRowPos[entry.Key] % roomSide < roomSide-1);
             bool BoundCheckBottom = ((RouteRowPos[entry.Value] % roomSide) > 0 && RouteRowPos[entry.Value] % roomSide < roomSide-1);
-
-
-            //SPAWN ENTITY
-            //TODO
-            //Debug.Log(entry.Key+": "+RouteRowPos[entry.Key]);
-            //Debug.Log(entry.Value+": "+RouteRowPos[entry.Value]);
         
            if (RouteRowPos[entry.Value] > (roomSide-1) && BoundCheckTop && BoundCheckBottom) { 
 
@@ -305,9 +296,6 @@ public class GridScript : MonoBehaviour
                     GameObject.Destroy(Row[(TopPos-3)-roomSide]);
                     GameObject.Destroy(Row[(BottomPos-3)+roomSide]);
 
-
-                    Debug.Log(entry.Key + " " + Top + " " + TopPos);
-                    Debug.Log(entry.Value + " " + Bottom + " " + BottomPos);
      //               doesSide = true;
                 } else if (BottomDir == 'R' && (BottomPos % roomSide) < (roomSide - 2) && (TopPos % roomSide) < (roomSide - 2)) {
 
@@ -340,8 +328,6 @@ public class GridScript : MonoBehaviour
                     GameObject.Destroy(Row[(TopPos+3)-roomSide]);
                     GameObject.Destroy(Row[(BottomPos+3)+roomSide]);
 
-                    Debug.Log(entry.Key + " " + Top + " " + TopPos);
-                    Debug.Log(entry.Value + " " + Bottom + " " + BottomPos);
      //               doesSide=true;
                 }
             
