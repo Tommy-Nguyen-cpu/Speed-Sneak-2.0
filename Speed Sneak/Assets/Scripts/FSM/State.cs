@@ -123,8 +123,6 @@ public class State
             }
             else if (currentState == States.SUSPECT)
             {
-                Debug.Log("Something suspicious just happened!");
-                // DONE: Temporary action agent will take. Will change once we implement PCG and A* Search.
                 currentNPC.transform.LookAt(SoundDetection.sourceOfSound.transform, Vector3.up);
                 currentNPC.transform.position = Vector3.MoveTowards(currentNPC.transform.position, SoundDetection.sourceOfSound.transform.position, Time.deltaTime * 5);
 
