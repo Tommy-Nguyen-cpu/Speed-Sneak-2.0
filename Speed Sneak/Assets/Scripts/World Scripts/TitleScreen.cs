@@ -6,14 +6,22 @@ using UnityEngine.SceneManagement;
 
 public class TitleScreen : MonoBehaviour
 {
-
+    /// <summary>
+    /// Determines whether we display a "Win" or "Lose" text (or none).
+    /// </summary>
     public enum GameState
     {
         WON, LOST, NEITHER
     }
 
+    /// <summary>
+    /// Will be set everytime the player loses/wins.
+    /// </summary>
     public static GameState currentState = GameState.NEITHER;
 
+    /// <summary>
+    /// Will activate each time we switch to this scene.
+    /// </summary>
     void Awake()
     {
         if(currentState == GameState.WON)
