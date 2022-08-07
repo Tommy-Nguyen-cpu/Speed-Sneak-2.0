@@ -5,7 +5,9 @@ using UnityEngine;
 public class FogScript : MonoBehaviour
 {
 
-    // Update is called once per frame
+    /// <summary>
+    /// All it does is it moves the "Fog" GameObject up slightly at the end of every frame.
+    /// </summary>
     void LateUpdate()
     {
         transform.position = new Vector3(transform.position.x, 0f, transform.position.z + .005f);
