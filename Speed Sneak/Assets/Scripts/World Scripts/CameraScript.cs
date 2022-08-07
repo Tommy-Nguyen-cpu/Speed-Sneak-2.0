@@ -14,13 +14,14 @@ public class CameraScript : MonoBehaviour
         PlayerZPosition = transform.position.z;
     }
 
-    // Update is called once per frame
+    /// <summary>
+    ///  Checks to see if the player moved a certain distance before moving the camera.
+    /// </summary>
     void Update()
     {
         float differenceInZValue = transform.position.z - PlayerZPosition;
         if(differenceInZValue > 5 || differenceInZValue < -5)
         {
-            Debug.Log("Difference In Z Value: " + differenceInZValue);
             int incrementCameraZPosition = differenceInZValue > 0 ? 5 : -5;
             PlayerZPosition = transform.position.z;
             Camera.transform.position = new Vector3(Camera.transform.position.x, Camera.transform.position.y, Camera.transform.position.z + incrementCameraZPosition);
