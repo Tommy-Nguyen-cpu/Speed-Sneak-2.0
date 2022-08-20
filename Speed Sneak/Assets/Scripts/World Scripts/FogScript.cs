@@ -10,6 +10,6 @@ public class FogScript : MonoBehaviour
     /// </summary>
     void LateUpdate()
     {
-        transform.position = new Vector3(transform.position.x, 0f, transform.position.z + .005f);
+        transform.position = new Vector3(transform.position.x, 0f, transform.position.z + .001f);
     }
 }
