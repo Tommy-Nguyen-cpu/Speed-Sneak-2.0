@@ -5,28 +5,47 @@ using System;
 
 public class PatrolMovement
 {
-    public float speed = 5f;
-    public int height = 10;
-    public int width = 10;
-    public double timeCounter = 0;
 
 
     public Vector3 NPCOriginalPosition;
 
+    public char rotationDirection;
+
     public void NPCPatrol(GameObject NPC)
     {
-        /*timeCounter += Time.deltaTime;
+        RaycastHit hitLeft;
 
-        // These two mathematical functions allow the agent to move in a circle (since the values of sine and consines go up but eventually go down).
-        float CosX = (float)Math.Cos(timeCounter);
-        float SinZ = (float)Math.Sin(timeCounter);
+        RaycastHit hitForward;
 
-        // We can increase the size of the circle rotation by changing "2f" to some larger value (ex: 10f).
-        float x = NPCOriginalPosition.x + (CosX)*2f;
-        float z = NPCOriginalPosition.z + (SinZ)*2f;
+        NPCOriginalPosition = NPC.transform.position;
+        Vector3 NPCPosition = new Vector3(NPC.transform.position.x, 0f, NPC.transform.position.z);
 
-        NPC.transform.position = new Vector3(x, NPC.transform.position.y, z);
-        NPC.transform.Rotate(0.0f, -1*CosX, 0.0f, Space.World);*/
+        Vector3 raycastDirection = rotationDirection == 'L' ? Vector3.left : Vector3.right;
+
+        // Casts a ray that looks for collisions with the ray.
+        bool collidedWithWallForward = Physics.Raycast(NPCPosition, NPC.transform.TransformDirection(Vector3.forward), out hitForward, .5f);
+        
+        // Checks to see if the NPC hits anything ahead of it. NPC will only change directions once it hits something in front of it.
+        if (hitForward.collider != null && (hitForward.collider.name == "BaseTest(Clone)" || hitForward.collider.name.Contains("Wall") || hitForward.collider.name.Contains("Goal")))
+        {
+            // Casts a ray that looks for collisions with the ray.
+            bool collidedWithWallLeft = Physics.Raycast(NPCPosition, NPC.transform.TransformDirection(raycastDirection), out hitLeft, 1f);
+            
+            // Checks left and right to see if it hits anything. If it isn't hitting anything on the left then it will turn left, otherwise it will turn right.
+            if (hitLeft.collider == null)
+            {
+                NPC.transform.Rotate(Vector3.up, rotationDirection == 'L' ? -90 : 90);
+            }
+            else
+            {
+                // If the NPC can't turn left or right, it will turn around and go back.
+                NPC.transform.Rotate(Vector3.up, 180);
+                rotationDirection = rotationDirection == 'L' ? 'R' : 'L';
+
+            }
+        }
+
+        NPC.transform.position += NPC.transform.forward * Time.deltaTime * 2;
 
 
     }
