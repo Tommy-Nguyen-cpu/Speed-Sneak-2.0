@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
             transform.Translate(Vector3.forward * Time.deltaTime * 5);
         }
 
-        if (Input.GetKey(KeyCode.DownArrow))
+        else if (Input.GetKey(KeyCode.DownArrow))
         {
             // Rotating to face backwards.
             rotatePlayer(KeyCode.DownArrow, 180f);
@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
             transform.Translate(Vector3.forward * Time.deltaTime * 5);
         }
 
-        if (Input.GetKey(KeyCode.LeftArrow))
+        else if (Input.GetKey(KeyCode.LeftArrow))
         {
             anim.Play("RunAndAim");
             
@@ -41,7 +41,7 @@ public class PlayerController : MonoBehaviour
             transform.Translate(Vector3.forward * Time.deltaTime * 5);
         }
 
-        if (Input.GetKey(KeyCode.RightArrow))
+        else if (Input.GetKey(KeyCode.RightArrow))
         {
             anim.Play("RunAndAim");
 
@@ -49,8 +49,7 @@ public class PlayerController : MonoBehaviour
             rotatePlayer(KeyCode.RightArrow, 90f);
             transform.Translate(Vector3.forward * Time.deltaTime * 5);
         }
-
-        if (!Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.DownArrow) && !Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow))
+        else
         {
             anim.Play("Standing");
         }
