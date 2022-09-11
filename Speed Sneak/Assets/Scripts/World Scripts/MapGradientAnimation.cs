@@ -29,7 +29,7 @@ public class MapGradientAnimation : MonoBehaviour
 
 
     float colorToChangeTo = 0.0f;
-    float colorIncrement = .01f;
+    float colorIncrement = .001f;
 
     GameObject[] listOfWallBlocks;
     // Start is called before the first frame update
@@ -64,6 +64,8 @@ public class MapGradientAnimation : MonoBehaviour
     void Update()
     {
         currentTime += Time.deltaTime;
+
+        // TODO: Successfully changes color, but the color is gradual. After each iteration, the previous color gets overridden (which we don't want). We want a gradient map.
         // Assuming the grid is square, we don't need to worry about checking columnToIterate since they are both the same.
         if (rowEnd > widthOfListOfBlocks)
         {
@@ -77,7 +79,7 @@ public class MapGradientAnimation : MonoBehaviour
             columnEndIncrement = -1;
             columnIndexIncrement = -1;
 
-            colorIncrement = -.01f;
+            colorIncrement = -.001f;
             colorToChangeTo = 1.0f;
 
             parameterComparator = (startReverse, endReverse) => (startReverse >= endReverse);
@@ -96,7 +98,7 @@ public class MapGradientAnimation : MonoBehaviour
             columnEndIncrement = 1;
 
             colorToChangeTo = 0.0f;
-            colorIncrement = .01f;
+            colorIncrement = .001f;
 
             parameterComparator = (start, end) => start < end;
             indexCalculator = (RowCurrent, TotalRows, ColumnCurrent) => RowCurrent * TotalRows + ColumnCurrent;
@@ -118,7 +120,7 @@ public class MapGradientAnimation : MonoBehaviour
                 for (int currentColumn = columnStart; startEndComparator(currentColumn, columnEnd); currentColumn += columnIndexIncrement)
                 {
                     int index = indexCalculate(currentRow, widthOfListOfBlocks, currentColumn);
-                    // TODO: Make it so that it changes to colors other than red OR blue (note: currently it changes to either red or blue depending on what value is put int "Evaluation").
+
                     if (listOfWallBlocks[index] != null)
                     {
                         MeshRenderer render = listOfWallBlocks[index].GetComponent<MeshRenderer>();
@@ -133,6 +135,8 @@ public class MapGradientAnimation : MonoBehaviour
 
             rowEnd += rowEndIncrement;
             columnEnd += columnEndIncrement;
+
+            
 
             currentTime = 0.0f;
         }
