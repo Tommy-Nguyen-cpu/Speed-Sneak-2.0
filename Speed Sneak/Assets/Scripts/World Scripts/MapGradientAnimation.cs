@@ -124,11 +124,8 @@ public class MapGradientAnimation : MonoBehaviour
                     if (listOfWallBlocks[index] != null)
                     {
                         MeshRenderer render = listOfWallBlocks[index].GetComponent<MeshRenderer>();
-                        Material currentWallMaterial = new Material(Shader.Find("Standard"));
                         colorToChangeTo += colorIncrement;
-                        currentWallMaterial.color = gradient.Evaluate(colorToChangeTo);
-                        render.material = null;
-                        render.material = currentWallMaterial;
+                        render.material.color = gradient.Evaluate(colorToChangeTo);
                     }
                 }
             }
