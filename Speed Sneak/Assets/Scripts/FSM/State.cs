@@ -147,7 +147,6 @@ public class State
 
                 currentState = transition.target;
 
-                Debug.Log("Current State: " + currentState);
                 break;
             }
         }
