@@ -12,5 +12,5 @@ public class Transition
     /// <summary>
     /// Target state if condition is met.
     /// </summary>
-    public State target;
+    public State.States target;
 }
