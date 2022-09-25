@@ -17,11 +17,10 @@ public class AnimContr : MonoBehaviour
     {
         anim = GetComponent<Animator>();
 
-        NPCOriginalPosition = gameObject.transform.position;
-
         currentState = new State();
 
-        transitions = currentState.SetUpState(NPCOriginalPosition);
+        currentState.SetUpState();
+
     }
 
     // Update is called once per frame
@@ -33,7 +32,6 @@ public class AnimContr : MonoBehaviour
 
     void LateUpdate()
     {
-        State newState = currentState.CheckPossibleStateChange(currentState, transitions, gameObject);
-        currentState = newState;
+        currentState.CheckPossibleStateChange(gameObject);
     }
 }

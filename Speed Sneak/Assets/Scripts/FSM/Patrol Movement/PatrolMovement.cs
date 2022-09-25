@@ -6,9 +6,6 @@ using System;
 public class PatrolMovement
 {
 
-
-    public Vector3 NPCOriginalPosition;
-
     public char rotationDirection;
 
     public void NPCPatrol(GameObject NPC)
@@ -17,7 +14,6 @@ public class PatrolMovement
 
         RaycastHit hitForward;
 
-        NPCOriginalPosition = NPC.transform.position;
         Vector3 NPCPosition = new Vector3(NPC.transform.position.x, 0f, NPC.transform.position.z);
 
         Vector3 raycastDirection = rotationDirection == 'L' ? Vector3.left : Vector3.right;

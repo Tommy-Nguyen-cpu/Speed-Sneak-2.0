@@ -18,6 +18,8 @@ public class State
     // Initializes the "PatrolMovement" which allows the NPC to patrol.
     private PatrolMovement patrolling = new PatrolMovement();
 
+    List<Transition> transitions;
+
     /// <summary>
     /// PATROL - if agent doesn't see player, follow a set route.
     /// CHASE - if agent sees player, chase player.
@@ -39,13 +41,13 @@ public class State
     }
 
 
-    public List<Transition> SetUpState(Vector3 OriginalPosition)
+    public void SetUpState()
     {
 
         // By default, the agent should be patrolling the field.
         setState(States.PATROL);
 
-        List<Transition> transitions = new List<Transition>();
+        transitions = new List<Transition>();
 
         // Set up transitions.
 
@@ -72,31 +74,13 @@ public class State
         toPatrol.conditional = new PatrolCondition();
         transitions.Add(toPatrol);
 
+        transitions[0].target = States.SUSPECT;
 
-        // Sets the original position of the NPC.
-        patrolling.NPCOriginalPosition = OriginalPosition;
+        transitions[1].target = States.WIN;
 
+        transitions[2].target = States.CHASE;
 
-        State suspect = new State();
-        suspect.currentState = States.SUSPECT;
-        transitions[0].target = suspect;
-
-        State win = new State();
-        win.currentState = States.WIN;
-        transitions[1].target = win;
-
-
-        State chase = new State();
-        chase.currentState = States.CHASE;
-        transitions[2].target = chase;
-
-
-        // Initialize the states
-        State patrol = new State();
-        patrol.currentState = States.PATROL;
-        transitions[3].target = patrol;
-
-        return transitions;
+        transitions[3].target = States.PATROL;
     }
 
     // Update is called once per frame
@@ -144,7 +128,7 @@ public class State
     }
 
 
-    public State CheckPossibleStateChange(State currentState, List<Transition> transitions, GameObject currentNPC)
+    public void CheckPossibleStateChange(GameObject currentNPC)
     {
 
         foreach(Transition transition in transitions)
@@ -161,10 +145,11 @@ public class State
                 currentTime = 0.0f;
                 transition.conditional.elapsedTime = 0.0f;
 
-                return transition.target;
+                currentState = transition.target;
+
+                break;
             }
         }
-        return currentState;
     }
 
     #region Helper Methods
