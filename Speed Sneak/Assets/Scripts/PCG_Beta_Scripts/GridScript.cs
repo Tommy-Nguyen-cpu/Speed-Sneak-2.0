@@ -5,7 +5,7 @@ using UnityEngine;
 public class GridScript : MonoBehaviour
 {
     //Each slow in Row is dedicated to a single chunk, of object wall
-    public GameObject[] Row = new GameObject[625];//15^2
+    public static GameObject[] Row = new GameObject[625];//15^2
     public GameObject Walls;
     //as this is a single array, keep these dimensions square
     int roomFar = 25;
