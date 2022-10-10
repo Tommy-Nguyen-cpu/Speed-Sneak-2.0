@@ -8,7 +8,7 @@ public class BossBeamScript : MonoBehaviour
     void Update()
     {
         // TODO: At least its moving now. Not in the direction the NPC is looking at though.
-        transform.position += transform.forward * Time.deltaTime * 10f;
+        transform.position += transform.forward * Time.deltaTime * 15f;
     }
 
     void OnCollisionEnter(Collision collision)
