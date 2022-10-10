@@ -13,6 +13,7 @@ public class BossVision : MonoBehaviour
     {
         playerPosition = player.transform.position;
     }
+
     void LateUpdate()
     {
         Vector3 newPosition = Vector3.MoveTowards(transform.position, playerPosition, Time.deltaTime * 5);
