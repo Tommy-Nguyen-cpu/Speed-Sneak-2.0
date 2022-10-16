@@ -11,15 +11,16 @@ public class BossBeamScript : MonoBehaviour
         transform.position += transform.forward * Time.deltaTime * 15f;
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider collision)
     {
-        if (collision.collider.name.Contains("Platform"))
+        if (collision.name.Contains("Platform"))
         {
             gameObject.SetActive(false);
         }
-        else if (collision.collider.name.Contains("Player"))
+        else if (collision.name.Contains("Player"))
         {
-            Debug.Log("Hit Player!");        
+            HealthBar playerHealth = GameObject.Find("HealthBar").GetComponent<HealthBar>();
+            playerHealth.SetHealth(-1f);
         }
     }
 }
