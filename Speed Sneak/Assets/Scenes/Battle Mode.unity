@@ -466,6 +466,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1183093431 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2219710249188825522, guid: 99505326a74f01440b059294c6ae79f4,
+    type: 3}
+  m_PrefabInstance: {fileID: 1940173814343586971}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1254953424
 GameObject:
   m_ObjectHideFlags: 0
@@ -861,6 +867,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 925197177}
+  bossAnimation: {fileID: 1183093431}
   Indicator: {fileID: 440044866465179631, guid: 91b6684e6eb3b964ba3fdb07adf159e7,
     type: 3}
 --- !u!4 &1604193884
