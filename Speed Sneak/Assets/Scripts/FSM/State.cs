@@ -120,8 +120,7 @@ public class State
             }
             else if (currentState == States.WIN)
             {
-                TitleScreen.currentState = TitleScreen.GameState.LOST;
-                SceneManager.LoadScene(0);
+                SceneManager.LoadScene(2);
             }
         }
 

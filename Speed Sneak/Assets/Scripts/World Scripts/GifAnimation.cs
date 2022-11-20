@@ -17,7 +17,6 @@ public class GifAnimation : MonoBehaviour
     void Update()
     {
         int index = (int)((Time.time * framesPerSecond) % frames.Length);
-        Debug.Log("Index: " + index);
         GetComponent<Renderer>().material.mainTexture = frames[index];
     }
 }
